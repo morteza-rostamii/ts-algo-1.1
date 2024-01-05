@@ -177,4 +177,41 @@ And always remember: Communicate your thought process as much as possible. Donâ€
 finishing it fast. Every part of the interview matters
 
 */
+
+=======================================================
+
+# data structures:
+==
+
+# arrays
+
+# js dynamic array =: might copy the whole array in order to add one element at the end.
+  # so: arr.push() might become O(n)
+
+# stacks 
+
+# queues
+
+# linked lists
+
+# trees
+
+# tries
+
+# graphs
+
+# hash tables 
+
+# algorithms:
+==
+
+# sorting 
+
+# dynamic programmig
+
+# bfs and dfs (searching)
+
+# recursion
+
+
  -->
