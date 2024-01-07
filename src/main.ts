@@ -6,14 +6,15 @@ import linkedList from "./modules/linkedList";
 import module1 from "./modules/module1";
 import module2 from "./modules/module2";
 import module3 from "./modules/module3";
+import stackAndQueue from "./modules/stackAndQueue";
 
 function main() {
   //module1.main();
   //module2.main();
   //module3.main();
   //hashTables.main();
-  linkedList.main();
-
+  //linkedList.main();
+  stackAndQueue.main();
 }
 
 main();
