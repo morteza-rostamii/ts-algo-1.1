@@ -280,11 +280,28 @@ const stackAndQueue = {
 
     # leetcode: 
 
-    
+    constraints:
+    ==
+
+    # Two Stacks Only: You are only allowed to use two stacks to create the queue.
+
+    # Supported Queue Functions: The queue implementation should support standard queue functions: push, pop, peek, and empty.
+
+    # Stack Operations Only: While implementing the queue, you can use only standard stack operations such as push (to top), peek/pop (from top), size, and is empty. No other operations specific to queues can be used in the implementation.
+
+    # Constraint on Range: The values to be pushed into the queue will be integers ranging from 1 to 9, inclusive.
+
+    # Limited Number of Calls: There will be at most 100 calls made to push, pop, peek, and empty.
+
+      during the execution of the program using the implemented queue, the combined count of all method calls (push, pop, peek, and empty) will be at most 100 times.
+
+    # Validity of Calls: All calls made to pop and peek will be valid.
+
+      This implies that you don't need to handle situations where these operations are called on an empty queue
     */
 
-    class Stack<T> {
-      data: T[];
+    class Stack {
+      data: number[];
       size: number;
       
       constructor() {
@@ -293,17 +310,16 @@ const stackAndQueue = {
       }
 
       // push from the top
-      public push(data: T): void {
+      public push(data: number): void {
         this.data.push(data);
         this.size++;
       }
 
       // pop from the top
-      public pop(): T | null {
+      public pop(): number | null {
         if (this.isEmpty()) return null;
 
         const popedEl = this.data.pop();
-        console.log('--%', this.data)
         if (!popedEl) return null;
 
         this.size--;
@@ -326,52 +342,87 @@ const stackAndQueue = {
 
     console.log(stack1.data); */
 
-    class Queue<T> {
+    class Queue {
       // for push: [1, 2, 3]
-      stackIn: Stack<T>;
+      inbox: Stack;
       // for pop: [3, 2, 1]
-      stackOut: Stack<T>;
+      outbox: Stack;
       size: number;
+      maxCall: number;
 
       constructor() {
-        this.stackIn = new Stack();
-        this.stackOut = new Stack();
+        this.inbox = new Stack();
+        this.outbox = new Stack();
         this.size = 0;
+        this.maxCall = 0;
       }
 
-      public push(data: T): void {
+      private reachedMaxCall(): boolean {
+        return this.maxCall > 100;
+      }
 
-        this.stackIn.push(data);
+      public push(data: number): void {
+        // input constraints:
 
-        for (let i=0; i < this.stackIn.size; i++) {
-          //console.log(this.stackIn.data[i]);
+        // check maxCal
+        if (this.reachedMaxCall()) return;
 
-          // if: pop element from top of stackIn and push into stackOut -: we reverse
-          const element = this.stackIn.pop();
+        // data between: 1 to 9 -: include 1 and 9
+        if (data < 1 || data > 9) return; 
 
-          if (!element) break;
-          console.log('--', element)
-          // [1,2 ] =: [2, 1]
-          this.stackOut.push(element);
+        // push from the back of queue
+        this.inbox.push(data);
+
+        // first push and outbox empty
+        if (this.outbox.isEmpty()) {
+          const el = this.inbox.pop();
+          if (el) this.outbox.push(el);
         }
-        // console.log('--');
-
+        
+        this.maxCall++;
         this.size++;
       }
 
       // pop from the front of the stack
-      public pop(): T | null {
+      public pop(): number | null {
+        // check maxCal
+        if (this.reachedMaxCall()) return null;
+
         if (this.empty()) return null;
 
+        // first--pop() : outbox has the first pushed element.
+        const popedElement: number | null = this.outbox.pop();
 
+        // if: outbox is empty? get more from inbox;
+        if (this.outbox.isEmpty()) {
+          // empty the inbox into outbox.
+          while (!this.inbox.isEmpty()) {
+            const el = this.inbox.pop()
+            if (!el) break;
+            this.outbox.push(el);
+          }
+        }
+
+        this.size--;
+        this.maxCall++;
+        return popedElement;
       }
 
-      public peek(): T | null {
+      // return element in front of the queue
+      public peek(): number | null {
+        // check maxCal
+        if (this.reachedMaxCall()) return null;
         if (this.empty()) return null;
 
+        this.maxCall++;
+        return this.outbox.data[this.outbox.size - 1];
       }
 
-      public empty(): boolean {
+      public empty(): boolean | undefined {
+        // check maxCal
+        if (this.reachedMaxCall()) return;
+
+        this.maxCall++;
         return this.size === 0;
       }
     }
@@ -380,10 +431,20 @@ const stackAndQueue = {
 
     const queue1 = new Queue();
 
-    queue1.push('a');
-    queue1.push('b');
-    queue1.push('c');
-    queue1.push('d');
+    queue1.push(1);
+    // can't push 0
+    queue1.push(0);
+    //queue1.push(3);
+    //queue1.push(4);
+
+    /* console.log('popedEL: ', queue1.pop());
+    console.log('popedEL: ', queue1.pop());
+    console.log('popedEL: ', queue1.pop());
+    console.log('popedEL: ', queue1.pop()); */
+
+
+    console.log('first in line', queue1.peek());
+    //console.log(queue1.pop());
 
     console.log(queue1);
   },
